@@ -119,7 +119,6 @@ function serialization.serialize(value, pretty)
 end
 
 function serialization.unserialize(data)
-  checkArg(1, data, "string")
   local result, reason = load("return " .. data, "=data", _, {math={huge=math.huge}})
   if not result then
     return nil, reason
