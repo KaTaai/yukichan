@@ -1,0 +1,1 @@
+{server="localhost",realname="yuki",port=6667,channels={"#SKSDev"},hostname="lain",servername="lain",username="yuki",nick="yukichan"}
