@@ -71,6 +71,7 @@ function parsemsg(nick,chan,message)
    print("No longer left hanging.")
   end
  end
+ if message:find("o/ * \\o") ~= nil and nick == "Shocky" then leftHanging = {0, false} end
  if string.find(message,":") == 1 then
   local command = message:sub(2) .. " "
   if command == "" then return end
