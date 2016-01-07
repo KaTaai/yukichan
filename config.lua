@@ -1,1 +1,1 @@
-{server="localhost",realname="yuki",port=6667,channels={"#SKSDev"},hostname="lain",servername="lain",username="yuki",nick="yukichan"}
+{server="irc.quakenet.org",nick="yukichan",hostname="lain",servername="lain",realname="yuki",channels={"#SKSDev","#v","#ssss"},prefix=":",username="yuki",port=6667,admins={"ShadowKatStudios"}}
