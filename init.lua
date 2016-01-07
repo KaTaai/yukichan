@@ -64,8 +64,12 @@ leftHanging = {0,false}
 function parsemsg(nick,chan,message)
  if message:find("o/") ~= nil or message:find("\\o") ~= nil and nick ~= "Shocky" and nick ~= "yukichan" then
   if leftHanging[2] == false then
-   print ("Left hanging at "..os.time())
-   leftHanging = {os.time(),true,chan}
+   print (nick .." left hanging at "..os.time())
+   local typeOfHighFive="o/"
+   if message:find("o/") ~= nil then
+    typeOfHighFive = "\\o"
+   end
+   leftHanging = {os.time(),true,chan,typeOfHighFive}
   elseif leftHanging[2] == true then
    leftHanging = {0,false}
    print("No longer left hanging.")
@@ -153,9 +157,14 @@ function main()
  connection:send("NICK "..config.nick.."\n")
  connection:send("USER "..config.username.." "..config.hostname.." "..config.servername.." "..config.realname.."\n")
  repeat
-  line = connection:receive()
+  line = connection:receive() or ""
+  if string.find(line, "PING :") == 1 then
+   local _,pingid = string.match(line,"([^,]+):([^,]+)")
+   writeln("PONG :"..pingid)
+   print("Pinged: "..pingid)
+  end 
   print(line)
- until string.match(line,"%+i") ~= false
+ until string.match(line or "","%+i") ~= nil
  os.sleep(2)
  print("Sent everything relevant. Joining channels.")
  for k,v in pairs(config.channels) do
@@ -169,7 +178,7 @@ function main()
   end
   if os.time() > leftHanging[1]+3 and leftHanging[2] then
    print ("Responding to a hanging high-five at "..leftHanging[1])
-   sendchan(leftHanging[3],"\\o")
+   sendchan(leftHanging[3],leftHanging[4] or "\\o")
    leftHanging={0,false}
   end
   if line == nil then line = "" end
