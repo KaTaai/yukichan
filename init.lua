@@ -59,10 +59,17 @@ function addcommand(fname,str)
  cmds[fname] = load(str)
 end
 
+leftHanging = {0,false}
+
 function parsemsg(nick,chan,message)
- if message:sub(-2) == "o/" and nick ~= "Shocky" and nick ~= "yukichan" then
-  os.sleep(4)
-  sendchan(chan,"\\o")
+ if message:find("o/") ~= nil or message:find("\\o") ~= nil and nick ~= "Shocky" and nick ~= "yukichan" then
+  if leftHanging[2] == false then
+   print ("Left hanging at "..os.time())
+   leftHanging = {os.time(),true,chan}
+  elseif leftHanging[2] == true then
+   leftHanging = {0,false}
+   print("No longer left hanging.")
+  end
  end
  if string.find(message,":") == 1 then
   local command = message:sub(2) .. " "
@@ -147,7 +154,7 @@ function main()
  repeat
   line = connection:receive()
   print(line)
- until string.match(line,"+i") ~= false
+ until string.match(line,"%+i") ~= false
  os.sleep(2)
  print("Sent everything relevant. Joining channels.")
  for k,v in pairs(config.channels) do
@@ -158,6 +165,11 @@ function main()
   if line ~= nil and line ~= "timeout" then
    print(line)
    pcall(parse,line)
+  end
+  if os.time() > leftHanging[1]+3 and leftHanging[2] then
+   print ("Responding to a hanging high-five at "..leftHanging[1])
+   sendchan(leftHanging[3],"\\o")
+   leftHanging={0,false}
   end
   if line == nil then line = "" end
  until string.find(line,"ERROR :Closing link:") ~= nil
