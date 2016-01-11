@@ -1,8 +1,10 @@
 local socket = require "socket"
 local serialization = require "serialization"
 
-local config = {}
-local cmds={}
+config = {}
+cmds = {}
+hooks = {}
+timers = {}
 
 function loadconfig()
  local f = io.open("./config.lua","rb")
@@ -10,6 +12,47 @@ function loadconfig()
  f:close()
  print(content)
  config = serialization.unserialize(content)
+ hooks = {}
+ for k,v in pairs(config.hooks) do
+  print("Loading hook "..v)
+  local fo=io.open("./hooks/" .. v)
+  local c = fo:read("*a")
+  local s,f = pcall(load,c)
+  fo:close()
+  if s then
+   table.insert(hooks,f)
+   print("Hook "..v.." loaded")
+  else
+   print("Hook "..v.." failed to load:")
+   print(f)
+  end
+ end
+ cmds = {}
+ for k,v in pairs(config.cmds) do
+  local fo=io.open("./cmds/" .. v)
+  local s,f = pcall(load,fo:read("*a"))
+  fo:close()
+  if s then
+   table.insert(cmds,f)
+   print("Command "..v.." loaded")
+  else
+   print("Command "..v.." failed to load:")
+   print(f)
+  end
+ end
+ timers = {}
+ for k,v in pairs(config.timers) do
+  local fo=io.open("./timers/" .. v)
+  local s,f = pcall(load,fo:read("*a"))
+  fo:close()
+  if s then
+   table.insert(timers,f)
+   print("Timer "..v.." loaded")
+  else
+   print("Timer "..v.."Failed to load:")
+   print(f)
+  end
+ end
 end
 
 function saveconfig()
@@ -62,21 +105,10 @@ end
 leftHanging = {0,false}
 
 function parsemsg(nick,chan,message)
- if message:find("o/") ~= nil or message:find("\\o") ~= nil and nick ~= "Shocky" and nick ~= "yukichan" then
-  if leftHanging[2] == false then
-   print (nick .." left hanging at "..os.time())
-   local typeOfHighFive="o/"
-   if message:find("o/") ~= nil then
-    typeOfHighFive = "\\o"
-   end
-   leftHanging = {os.time(),true,chan,typeOfHighFive}
-  elseif leftHanging[2] == true then
-   leftHanging = {0,false}
-   print("No longer left hanging.")
-  end
+ for k,v in ipairs(hooks) do
+  v(nick,chan,message)
  end
- if message:find("o/ * \\o") ~= nil and nick == "Shocky" then leftHanging = {0, false} end
- if string.find(message,":") == 1 then
+ if string.find(message,config.prefix) == 1 then
   local command = message:sub(2) .. " "
   if command == "" then return end
   local tCommand = {}
@@ -99,6 +131,8 @@ function parsemsg(nick,chan,message)
    if checkAdmin(nick) then
     writeln(command:sub(9))
    end
+  elseif tCommand[1] == "drop" then
+   leftHanging = {0, false}
   elseif tCommand[1] == "join" then
    writeln("JOIN "..tCommand[2])
   elseif tCommand[1] == "lua" then
@@ -149,7 +183,7 @@ function main()
  function writeln(l) connection:send(l.."\n") end
  function sendchan(chan,msg) writeln("PRIVMSG "..chan.." :"..msg) end
  function readln() return connection:receive() end
- connection:settimeout(2)
+ connection:settimeout(1)
  print("Connected!")
  os.sleep(1)
  connection:receive() -- drop a line
@@ -163,12 +197,16 @@ function main()
    writeln("PONG :"..pingid)
    print("Pinged: "..pingid)
   end 
-  print(line)
+  if line ~= "" then
+   print(line)
+  end
  until string.match(line or "","%+i") ~= nil
  os.sleep(2)
  print("Sent everything relevant. Joining channels.")
- for k,v in pairs(config.channels) do
-  connection:send("JOIN " .. v.."\n")
+ if config.autojoin then
+  for k,v in pairs(config.channels) do
+   connection:send("JOIN " .. v.."\n")
+  end
  end
  repeat
   line = connection:receive()
@@ -176,10 +214,8 @@ function main()
    print(line)
    pcall(parse,line)
   end
-  if os.time() > leftHanging[1]+3 and leftHanging[2] then
-   print ("Responding to a hanging high-five at "..leftHanging[1])
-   sendchan(leftHanging[3],leftHanging[4] or "\\o")
-   leftHanging={0,false}
+  for k,v in ipairs(timers) do
+   v(line)
   end
   if line == nil then line = "" end
  until string.find(line,"ERROR :Closing link:") ~= nil
