@@ -14,6 +14,7 @@ if string.find(message,lnick) ~= nil and nick ~= "Shocky" then
   w,aitab = pcall(serialization.unserialize,content)
 --  print(w,aitab)
 --  print("Decoded AI file.")
+  message = message:lower()
   local selection = 0
   local hscore = 0
 --  print("Starting interpretation.")
