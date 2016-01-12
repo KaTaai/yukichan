@@ -23,5 +23,6 @@ autojoin=true,
 prefix=":",
 username="yuki",
 port=6667,
+timeout=300,
 admins={"ShadowKatStudios","XeonSquared"}
 }

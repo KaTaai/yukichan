@@ -167,11 +167,22 @@ function parse(line)
   print("Pinged: "..pingid)
  elseif string.find(line,":") == 1 and string.find(line,"PRIVMSG") ~= nil and string.find(line,"005") == nil then
   local s = string.sub(line,2) -- I
-  local nick,s = string.match(s,"([^,]+)!([^,]+)") -- am
-  local _,s = string.match(s,"([^,]+) PRIVMSG ([^,]+)") -- a
-  local chan, msg = string.match(s,"([^,]+) :([^,]+)") -- terrible
+  local ms,me = string.find(s,"!") -- me = match end, ms = match start
+  local nick = string.sub(s,1,ms-1)
+  s=string.sub(s,me+1)
+  local ms,me = string.find(s," PRIVMSG ")
+  s=string.sub(s,me+1)
+  local ms,me = string.find(s," :")
+  local chan = string.sub(s,1,ms-1)
+  local msg = string.sub(s,me+1)
+  --[[
+  -- old parser, kept for hysterical rasins
+  local nick,s = string.match(s,"([^,]+)!([^\n]+)") -- am
+  local _,s = string.match(s,"([^,]+) PRIVMSG ([^\n]+)") -- a
+  local chan, msg = string.match(s,"([^,]+) :([^\n]+)") -- terrible
   if chan == config.nick then chan = nick end
-  print(nick .. " " .. chan .. " " .. msg) --person
+  ]]--
+  print(nick,chan,msg) --person
   parsemsg(nick,chan,msg)
  end
 end
@@ -199,7 +210,8 @@ function main()
    local _,pingid = string.match(line,"([^,]+):([^,]+)")
    writeln("PONG :"..pingid)
    print("Pinged: "..pingid)
-  end 
+   _G.lastping = os.time()
+  end
   if line ~= "" then
    print(line)
   end
@@ -211,11 +223,15 @@ function main()
    connection:send("JOIN " .. v.."\n")
   end
  end
+ _G.lastping = os.time()
  repeat
   line = connection:receive()
   if line ~= nil and line ~= "timeout" then
    print(line)
    pcall(parse,line)
+  elseif line == "timeout" and os.time() > _G.lastping + config.timeout then
+   print("Connection to IRC timed out, aborting.")
+   break
   end
   for k,v in ipairs(timers) do
    local fail, errors = pcall(v,line)
