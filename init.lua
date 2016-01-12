@@ -106,7 +106,7 @@ leftHanging = {0,false}
 
 function parsemsg(nick,chan,message)
  for k,v in pairs(hooks) do
-  print("Running hook "..k)
+--  print("Running hook "..k)
   local fail,errors = pcall(v,nick,chan,message)
   if not fail then print(errors) end
  end
