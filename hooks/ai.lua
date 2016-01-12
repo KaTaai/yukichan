@@ -1,6 +1,6 @@
 nick,chan,message = ...
 local serialization = require "serialization"
-lnick = "yukichan"
+lnick = config.nick
 --print(lnick,nick,chan,message)
 if string.find(message,lnick) ~= nil and nick ~= "Shocky" then
 -- print("Message addressed to AI!")
@@ -37,7 +37,7 @@ if string.find(message,lnick) ~= nil and nick ~= "Shocky" then
   selstring = aitab[selection][1][1]
   if type(selstring) == "table" then
    for k,v in pairs(selstring) do
-    print(k.."="..v)
+    --print(k.."="..v)
    end
   end
   print("Selected response: " .. selstring)
