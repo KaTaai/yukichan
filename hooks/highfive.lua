@@ -1,6 +1,5 @@
 tArgs = {...}
 local nick, chan, message = tArgs[1],tArgs[2],tArgs[3]
-print(nick,chan,message,nick == "Shocky")
 if message:find("o/") ~= nil or message:find("\\o") ~= nil then
  if nick ~= "Shocky" then
   if _G.leftHanging[2] == false then

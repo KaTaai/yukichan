@@ -9,13 +9,16 @@ channels={
  "#ssss"
 },
 hooks={
-"highfive.lua"
+"highfive.lua",
+"ai.lua"
 },
 cmds={
+"reload.lua"
 },
 timers={
 "highfive.lua"
 },
+debug=false,
 autojoin=true,
 prefix=":",
 username="yuki",

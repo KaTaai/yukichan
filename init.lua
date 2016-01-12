@@ -20,7 +20,7 @@ function loadconfig()
   local s,f = pcall(load,c)
   fo:close()
   if s then
-   table.insert(hooks,f)
+   table.insert(hooks,#hooks+1,f)
    print("Hook "..v.." loaded")
   else
    print("Hook "..v.." failed to load:")
@@ -105,8 +105,10 @@ end
 leftHanging = {0,false}
 
 function parsemsg(nick,chan,message)
- for k,v in ipairs(hooks) do
-  v(nick,chan,message)
+ for k,v in pairs(hooks) do
+  print("Running hook "..k)
+  local fail,errors = pcall(v,nick,chan,message)
+  if not fail then print(errors) end
  end
  if string.find(message,config.prefix) == 1 then
   local command = message:sub(2) .. " "
@@ -152,7 +154,8 @@ function parsemsg(nick,chan,message)
     print("Killed by "..nick)
    end
   elseif cmds[tCommand[1]] ~= nil then
-   pcall(cmds[tCommand[1]],nick,chan,tCommand,message)
+   local fail, errors = pcall(cmds[tCommand[1]],nick,chan,tCommand,message)
+   if not fail then print(errors) end
   end
  end
 end
@@ -215,7 +218,8 @@ function main()
    pcall(parse,line)
   end
   for k,v in ipairs(timers) do
-   v(line)
+   local fail, errors = pcall(v,line)
+   if not fail then print(errors) end
   end
   if line == nil then line = "" end
  until string.find(line,"ERROR :Closing link:") ~= nil
