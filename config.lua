@@ -13,7 +13,8 @@ hooks={
 "ai.lua"
 },
 cmds={
-"reload.lua"
+reload="reload.lua",
+mpd="mpd.lua"
 },
 timers={
 "highfive.lua"

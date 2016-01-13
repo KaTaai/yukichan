@@ -34,7 +34,8 @@ if string.find(message,lnick) ~= nil and nick ~= "Shocky" then
    selection = math.random(1,#aitab)
   end
 --  print(selection)
-  selstring = aitab[selection][1][1]
+  seltab = aitab[selection][1]
+  selstring = seltab[math.random(1,#seltab)]
   if type(selstring) == "table" then
    for k,v in pairs(selstring) do
     --print(k.."="..v)

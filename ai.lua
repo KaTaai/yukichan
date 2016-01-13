@@ -1,7 +1,10 @@
 {{
-{"I'm a real person, I swear!"},
+{"I'm a real person, I swear!","I'm most certainly not a bot! D:"},
 {"are","you","bot"}
 },{
-{"Thisisalsoatest"},
-{"1234","9999"}
+{"I really like Queens of the Stone Age","Paramore is pretty good.","Green Day is great to listen to."},
+{"music","favorite","like","?"}
+},{
+{"Yes.","No.","Perhaps."},
+{"?","?"}
 }}

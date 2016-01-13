@@ -33,7 +33,7 @@ function loadconfig()
   local s,f = pcall(load,fo:read("*a"))
   fo:close()
   if s then
-   table.insert(cmds,f)
+   cmds[k]=f
    print("Command "..v.." loaded")
   else
    print("Command "..v.." failed to load:")
