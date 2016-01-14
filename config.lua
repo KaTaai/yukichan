@@ -1,5 +1,5 @@
-{server="irc.quakenet.org",
-nick="yukichan",
+{server="irc.freenode.net",
+nick="yukichan2",
 hostname="lain",
 servername="lain",
 realname="yuki",
@@ -20,7 +20,7 @@ timers={
 "highfive.lua"
 },
 debug=false,
-autojoin=true,
+autojoin=false,
 prefix=":",
 username="yuki",
 port=6667,

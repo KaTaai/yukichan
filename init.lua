@@ -152,6 +152,14 @@ function parsemsg(nick,chan,message)
     sendchan(chan,"Bye! o/")
     writeln("QUIT :Blame telstra.")
     print("Killed by "..nick)
+    os.exit(0)
+   end
+  elseif tCommand[1] == "restart" then
+   if checkAdmin(nick) then
+    sendchan(chan,"Bye! o/")
+    writeln("QUIT :Blame telstra.")
+    print("Killed by "..nick)
+    os.exit(1)
    end
   elseif cmds[tCommand[1]] ~= nil then
    local fail, errors = pcall(cmds[tCommand[1]],nick,chan,tCommand,message)
@@ -229,9 +237,12 @@ function main()
   if line ~= nil and line ~= "timeout" then
    print(line)
    pcall(parse,line)
-  elseif line == "timeout" and os.time() > _G.lastping + config.timeout then
-   print("Connection to IRC timed out, aborting.")
-   break
+  else
+--[[   if (line == "timeout" or line == nil) and os.time() > _G.lastping + config.timeout then
+    print(line)
+    print("Connection to IRC timed out, aborting.")
+    os.exit(1)
+   end]]--
   end
   for k,v in ipairs(timers) do
    local fail, errors = pcall(v,line)
