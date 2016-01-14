@@ -21,7 +21,7 @@
 {"hugs"}
 },{
 {"\01ACTION tenderly hugs %s\01"},
-{"I", "feel", "am", "sad", "tired", "angry", "depressed"}
+{"I", "feel", "am", "sad", "tired", "angry", "depressed","stressed"}
 },{
 {"Goodnight s% ! Have sweet dreams <3"},
 {"I", "am", "'m", "going", "to", "bed", "sleep", "goodnight", ".", "!"}
