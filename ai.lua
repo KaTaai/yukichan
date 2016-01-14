@@ -17,6 +17,9 @@
 {"\01ACTION hugs back\01"}
 {"hugs"}
 },{
+{"Maybe ;3","\01ACTION plays with %s","\01ACTION pushes %s","\01ACTION waves"},
+{"will","you","play","with","me","?"}
+},{
 {"Yes.","No.","Perhaps."},
 {"?","?"},true
 }}
