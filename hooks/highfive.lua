@@ -1,6 +1,6 @@
 tArgs = {...}
 local nick, chan, message = tArgs[1],tArgs[2],tArgs[3]
-if message:find("o/") ~= nil or message:find("\\o") ~= nil then
+if (message:find("o/") ~= nil or message:find("\\o") ~= nil) and message:find("\\o/") == nil then
  if nick ~= "Shocky" then
   if _G.leftHanging[2] == false then
    print (nick .." left hanging at "..os.time())

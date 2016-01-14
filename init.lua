@@ -161,6 +161,10 @@ function parsemsg(nick,chan,message)
     print("Killed by "..nick)
     os.exit(1)
    end
+  elseif tCommand[1] == "debug" then
+   if checkAdmin(nick) then
+    config.debug = not config.debug
+   end
   elseif cmds[tCommand[1]] ~= nil then
    local fail, errors = pcall(cmds[tCommand[1]],nick,chan,tCommand,message)
    if not fail then print(errors) end
@@ -172,7 +176,7 @@ function parse(line)
  if string.find(line, "PING :") == 1 then
   local _,pingid = string.match(line,"([^,]+):([^,]+)")
   writeln("PONG :"..pingid)
-  print("Pinged: "..pingid)
+  print("[Ping] "..pingid)
  elseif string.find(line,":") == 1 and string.find(line,"PRIVMSG") ~= nil and string.find(line,"005") == nil then
   local s = string.sub(line,2) -- I
   local ms,me = string.find(s,"!") -- me = match end, ms = match start
@@ -190,7 +194,7 @@ function parse(line)
   local chan, msg = string.match(s,"([^,]+) :([^\n]+)") -- terrible
   if chan == config.nick then chan = nick end
   ]]--
-  print(nick,chan,msg) --person
+  print("["..chan.."] <"..nick.."> "..msg) --person
   parsemsg(nick,chan,msg)
  end
 end
@@ -235,7 +239,7 @@ function main()
  repeat
   line = connection:receive()
   if line ~= nil and line ~= "timeout" then
-   print(line)
+   if config.debug then print(line) end
    pcall(parse,line)
   else
 --[[   if (line == "timeout" or line == nil) and os.time() > _G.lastping + config.timeout then
