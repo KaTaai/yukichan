@@ -14,6 +14,9 @@
 {"Who knows ? ;3"},
 {"will","you","marry","me","?"}
 },{
+{"\01ACTION hugs back\01"}
+{"hugs"}
+},{
 {"Yes.","No.","Perhaps."},
 {"?","?"},true
 }}
