@@ -20,6 +20,9 @@
 {"\01ACTION hugs %s\01"},
 {"hugs"}
 },{
+{"\01ACTION tenderly hugs %s\01"},
+{"I", "feel", "am", "sad", "tired", "angry", "depressed"}
+},{
 {"Yes.","No.","Perhaps."},
 {"?","?"},true
 }}
