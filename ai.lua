@@ -12,7 +12,7 @@
 {"tsunbot","tsunbot","tsunbot","tsunbot","tsunbot","tsunbot","tsunbot","tsunbot","tsunbot","tsunbot",}
 },{
 {"Who knows ? ;3"}
-{"Will you marry me ?"}
+{"will","you","marry","me","?"}
 },{
 {"Yes.","No.","Perhaps."},
 {"?","?"},true
