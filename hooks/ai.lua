@@ -21,8 +21,9 @@ if string.find(message,lnick) ~= nil and nick ~= "Shocky" then
   for k,v in ipairs(aitab) do
    local count = 0
    for l,w in ipairs(v[2]) do
-    if message:find(w) then count = count + 1 print ("yes") end
+    if message:find(w) then count = count + 1 end
    end
+   if config.debug then print(k.. " = " ..count) end
    if count > hscore then
     selection = k
     hscore = count
@@ -31,11 +32,19 @@ if string.find(message,lnick) ~= nil and nick ~= "Shocky" then
   end
   if hscore == 0 then
 --   print("No high score, selecting a random response.")
-   selection = math.random(1,#aitab)
+   local rtab = {}
+   for k,v in pairs(aitab) do
+    if v[3] == true then
+     table.insert(rtab,k)
+    end
+   end
+   selectrand = math.random(1,#rtab)
+   selection = rtab[selectrand]
   end
 --  print(selection)
   seltab = aitab[selection][1]
   selstring = seltab[math.random(1,#seltab)]
+  selstring = selstring:format(nick)
   if type(selstring) == "table" then
    for k,v in pairs(selstring) do
     --print(k.."="..v)
